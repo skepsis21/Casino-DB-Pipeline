@@ -45,6 +45,4 @@ SELECT
 FROM vip_alerts v
 INNER JOIN player_activity p 
     ON v.player_id = p.player_id;
-
-
-![Player Tier Distribution](Casino-DB-Pipeline.png)
+    ![Player Tier Distribution](Casino-DB-Pipeline.png)
