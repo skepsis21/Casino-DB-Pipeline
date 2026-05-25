@@ -1,3 +1,30 @@
+CREATE DATABASE IF NOT EXISTS cruise_casino_db;
+USE cruise_casino_db;
+
+-- 1. Source Player Ledger (Maps to player_activity.csv)
+CREATE TABLE IF NOT EXISTS player_activity (
+    player_id INT PRIMARY KEY,
+    player_name VARCHAR(100),
+    total_wagered DECIMAL(12, 2)
+);
+
+-- 2. Target Security Matrix (Populated automatically via Trigger)
+CREATE TABLE IF NOT EXISTS vip_alerts (
+    alert_id INT AUTO_INCREMENT PRIMARY KEY,
+    player_id INT,
+    large_wager DECIMAL(12, 2),
+    alert_status VARCHAR(50),
+    alert_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 3. Core Revenue Matrix (Maps to game_revenue.csv)
+CREATE TABLE IF NOT EXISTS game_revenue (
+    game_id INT PRIMARY KEY,
+    game_name VARCHAR(100),
+    game_type VARCHAR(50),
+    daily_revenue DECIMAL(12, 2)
+);
+
 
 -- Dynamic tier assignment based on lifetime wager thresholds.
 

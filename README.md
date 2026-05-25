@@ -27,3 +27,21 @@ Here is the structural mapping of how the data flows through the backend automat
 ### 3. Automated Storage Performance Purge (Scheduled Event)
 * **Objective:** Frees up indexing overhead on shipboards servers by purging zero-revenue slots and underperforming table records.
 * **Logic:** Runs a daily background maintenance job on the database clock system (`ON SCHEDULE EVERY 1 DAY`) to systematically drop row data where revenue equals zero.
+
+## 📊 Business Intelligence & Core Analytics
+
+To extract meaningful financial and security insights from the cruise ship casino floor, the database implements advanced multi-table relational analysis (`JOINS`).
+
+### 1. High-Roller Security Dispatch Protocol (INNER JOIN)
+Matches automated security trigger payloads back to the core passenger ledger so casino hosts can identify high-rollers by name in real time:
+
+```sql
+SELECT 
+    v.alert_id,
+    p.player_name,
+    v.large_wager,
+    v.alert_status,
+    v.alert_timestamp
+FROM vip_alerts v
+INNER JOIN player_activity p 
+    ON v.player_id = p.player_id;
