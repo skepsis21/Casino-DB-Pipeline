@@ -2,12 +2,16 @@ import os
 import sqlite3
 import pandas as pd
 
-# Define paths - pointing straight to your data folder
-db_path = os.path.join("..", "Data", "casino.db")
-player_csv = os.path.join("..", "Data", "player_activity.csv")
-game_revenue_csv = os.path.join("..", "Data", "game_revenue.csv")
+# Get the directory where this script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
 
-print("🚢 Initializing Casino SQLite Database Setup...\n")
+# Go up one level (parent directory) to reach the root, then into 'Data'
+db_path = os.path.join(script_dir, "..", "Data", "casino.db")
+player_csv = os.path.join(script_dir, "..", "Data", "player_activity.csv")
+game_revenue_csv = os.path.join(script_dir, "..", "Data", "game_revenue.csv")
+vip_alerts_csv = os.path.join(script_dir, "..", "Data", "vip_alerts.csv")
+
+print("🚢 Initializing Cruise Casino SQLite Database Setup...\n")
 
 # 1. Connect to SQLite
 conn = sqlite3.connect(db_path)
@@ -57,7 +61,7 @@ if os.path.exists(game_revenue_csv):
     df_games.to_sql("game_revenue", conn, if_exists="replace", index=False)
     print(f"   ✅ Imported {len(df_games)} games to 'game_revenue'")
 
-# 4. Populate sample alerts for demo purposes
+# 4. Populate active security alerts
 cursor.execute("DELETE FROM vip_alerts")
 cursor.execute("""
 INSERT INTO vip_alerts (player_id, game_id, large_wager, alert_status)
@@ -67,32 +71,7 @@ VALUES
 (1010, 502, 231500.00, 'Investigating')
 """)
 conn.commit()
-
-# 5. Execute and display analytics queries
-print("\n📊 ===============================================")
-print("📈 RUNNING BUSINESS INTELLIGENCE JOINS")
-print("==================================================\n")
-
-print("🔴 SECURITY DISPATCH PROTOCOL (INNER JOIN)")
-inner_join_query = """
-SELECT v.alert_id, p.player_name, v.large_wager, v.alert_status
-FROM vip_alerts v
-INNER JOIN player_activity p ON v.player_id = p.player_id;
-"""
-print(pd.read_sql_query(inner_join_query, conn).to_string(index=False))
-
-print("\n" + "="*50 + "\n")
-
-print("🎰 GAMING FLOOR UTILIZATION AUDIT (LEFT JOIN)")
-left_join_query = """
-SELECT g.game_name, g.game_type, g.daily_revenue, COALESCE(v.alert_status, 'No Alerts') AS security_status
-FROM game_revenue g
-LEFT JOIN vip_alerts v ON g.game_id = v.game_id;
-"""
-print(pd.read_sql_query(left_join_query, conn).to_string(index=False))
+print("   ✅ Populated active security alerts to 'vip_alerts'\n")
 
 conn.close()
-print("\n🎉 Database runs completed! Setup script safely verified.")
-
-## pip install pandas
-## python setup_local_db.py
+print("🎉 Database initialized successfully!")
