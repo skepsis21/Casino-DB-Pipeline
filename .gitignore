@@ -1,0 +1,14 @@
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Common SQL/Database tool temp logs
+*.log
+*.tmp
+.idea/
+.vscode/
+
+# Backup files
+*.bak
+*.sql.bak
